@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>設備点検（ステップ入力版）</title>
+<!-- <head> 内、<title> の下あたりに追加 -->
+<link rel="stylesheet" href="luminous-basic.min.css">
+<script src="Luminous.min.js"></script>
+
     <!-- マニフェストの読み込み -->
 <link rel="manifest" href="manifest.json">
 
@@ -42,6 +46,36 @@
         .btn-submit { background: #27ae60; color: white; }
         button:disabled { opacity: 0.5; }
         .progress { text-align: center; font-size: 0.8em; color: #666; margin-top: 10px; }
+.item { 
+    clear: both; /* 前の項目の回り込みを確実にリセット */
+    overflow: hidden; /* この項目内での回り込みを完結させる */
+    margin-bottom: 20px; 
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 15px; 
+}
+
+/* 点検ガイド用画像のスタイル */
+.check-photo {
+    float: left;
+    margin-right: 12px;
+    margin-bottom: 5px;
+    width: 100px; /* スマホで見やすいサイズ */
+}
+
+.check-photo img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+/* 補足説明テキスト */
+.memo {
+    font-size: 0.85em;
+    color: #666;
+    line-height: 1.4;
+    margin-top: 0;
+}
     </style>
 
 </head>
@@ -51,24 +85,45 @@
     <h1>ポンプ場点検</h1>
     <form id="inspectionForm">
 
-        <!-- STEP 1: 電気系統 -->
-        <div class="step active" id="step1">
-            <div class="section-title">【1/6】電気系統（1～6）</div>
-            <div class="guide-image">
-                <!-- ここに画像を貼る場合は以下のように書き換え -->
-                <!-- <img src="画像のURL"> -->
-                画像エリア：受電盤・電圧計付近
-            </div>
-            <div class="item"><label>1. 受電電圧計</label><input type="number" name="item1" step="any"></div>
-            <div class="item"><label>2. 二次電圧計</label><input type="number" name="item2" step="any"></div>
-            <div class="item"><label>3. 主ポンプ電圧計</label><input type="number" name="item3" step="any"></div>
+<!-- STEP 1: 電気系統 -->
+<div class="step active" id="step1">
+    <div class="section-title">【1/6】電気系統（1～6）</div>
+    
+    <!-- 1. 受電電圧計 -->
+    <div class="item">
+        <label>1. 受電電圧計</label>
+        <a href="img/002-3.webp" class="zoom check-photo">
+            <img src="img/002-4.webp" alt="受電電圧計の見本">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+        <input type="number" name="item1" step="any" placeholder="V">
+    </div>
+
+    <!-- 2. 二次電圧計 -->
+    <div class="item">
+        <label>2. 二次電圧計</label>
+        <a href="img/002-1.webp" class="zoom check-photo">
+            <img src="img/002-2.webp" alt="二次電圧計の見本">
+        </a>
+        <p class="memo">
+            低圧盤の電圧計を確認。通常は<b>210V</b>前後です。
+        </p>
+        <input type="number" name="item2" step="any" placeholder="V">
+    </div>
+
+    <!-- 3番以降は元のスタイルのままでも、順次上記に書き換えてもOK -->
+<div class="item"><label>3. 主ポンプ電圧計</label><input type="number" name="item3" step="any"></div>
             <div class="item"><label>4. 水中ポンプ電流計</label><input type="number" name="item4" step="any"></div>
             <div class="item"><label>5. 800φ運転時間</label><input type="number" name="item5" step="any"></div>
             <div class="item"><label>6. ランプテスト</label><div class="radio-group"><label><input type="radio" name="item6" value="可" checked>可</label><label><input type="radio" name="item6" value="否">否</label></div></div>
-            <div class="btn-group">
-                <button type="button" class="btn-next" onclick="nextStep(2)">次へ ＞</button>
-            </div>
-        </div>
+
+    <div class="btn-group">
+        <button type="button" class="btn-next" onclick="nextStep(2)">次へ ＞</button>
+    </div>
+</div>
+
 
         <!-- STEP 2: 燃料・圧縮機 -->
         <div class="step" id="step2">
