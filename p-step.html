@@ -34,6 +34,7 @@
         button:disabled { opacity: 0.5; }
         .progress { text-align: center; font-size: 0.8em; color: #666; margin-top: 10px; }
     </style>
+
 </head>
 <body>
 
@@ -155,20 +156,61 @@
 </div>
 
 <script>
-    // ★重要：GASをデプロイした後に発行される「ウェブアプリURL」をここに貼り付けてください
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxAghHtkPUUwT7Yzbubjn-xbJk1S0exrYgfYJNbMiiYONXUn22bEyrlVLpErU1-6JE7/exec";
+    const FORM_ID = 'inspectionForm';
+    const DRAFT_KEY = 'inspection_draft';
 
-    // ステップ切り替え関数
+    // --- 1. ステップ切り替え関数 ---
     function nextStep(stepNumber) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step' + stepNumber).classList.add('active');
-        document.getElementById('progressText').innerText = 'STEP ' + stepNumber + ' / 6';
-        window.scrollTo(0, 0); // ページトップに戻す
+        const targetStep = document.getElementById('step' + stepNumber);
+        if (targetStep) {
+            targetStep.classList.add('active');
+            document.getElementById('progressText').innerText = 'STEP ' + stepNumber + ' / 6';
+            window.scrollTo(0, 0);
+        }
     }
 
-    // 送信処理
-    document.getElementById('inspectionForm').addEventListener('submit', function(e) {
+    // --- 2. 自動保存機能 (入力のたびに実行) ---
+    document.getElementById(FORM_ID).addEventListener('input', () => {
+        const formData = new FormData(document.getElementById(FORM_ID));
+        const data = Object.fromEntries(formData.entries());
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+    });
+
+    // --- 3. 復元機能 (ページ読み込み時に実行) ---
+    window.addEventListener('load', () => {
+        const savedData = localStorage.getItem(DRAFT_KEY);
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            Object.keys(data).forEach(key => {
+                const elements = document.getElementsByName(key);
+                if (elements.length > 0) {
+                    if (elements[0].type === 'radio') {
+                        // ラジオボタンの復元
+                        Array.from(elements).forEach(el => {
+                            if (el.value === data[key]) el.checked = true;
+                        });
+                    } else {
+                        // 数値・テキストの復元
+                        elements[0].value = data[key];
+                    }
+                }
+            });
+            console.log("下書きからデータを復元しました。");
+        }
+    });
+
+    // --- 4. 送信処理 ---
+    document.getElementById(FORM_ID).addEventListener('submit', function(e) {
         e.preventDefault();
+        
+        // オンラインチェック
+        if (!navigator.onLine) {
+            alert("現在はオフラインです。電波の良い場所へ移動してから送信してください。入力内容は保持されています。");
+            return;
+        }
+
         if(!confirm("全てのデータを送信します。よろしいですか？")) return;
 
         const btn = document.getElementById('submitBtn');
@@ -181,9 +223,11 @@
             mode: "no-cors"
         }).then(() => {
             alert("送信完了しました！お疲れ様でした。");
+            // 送信成功時のみ下書きを削除
+            localStorage.removeItem(DRAFT_KEY);
             location.reload();
         }).catch(err => {
-            alert("エラー: " + err);
+            alert("エラーが発生しました: " + err);
             btn.disabled = false;
             btn.innerText = "全て送信する";
         });
