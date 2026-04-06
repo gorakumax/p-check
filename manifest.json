@@ -1,7 +1,7 @@
 {
   "name": "ポンプ場チェックリスト",
   "short_name": "ポンプ場",
-  "start_url": "index.html",
+  "start_url": "p-step.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
