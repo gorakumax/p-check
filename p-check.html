@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設備点検フォーム</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f7f9; padding: 15px; color: #333; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 10px; font-size: 1.3em; margin-bottom: 20px; }
+        .section { margin-bottom: 25px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #fff; }
+        .item { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
+        .item:last-child { border-bottom: none; }
+        label { display: block; font-weight: bold; font-size: 0.95em; margin-bottom: 8px; color: #444; }
+        /* 数値入力（テンキー用） */
+        input[type="number"] { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 18px; inputmode: decimal; box-sizing: border-box; }
+        input[type="number"]:focus { border-color: #1a73e8; outline: none; }
+        /* ラジオボタン */
+        .radio-group { display: flex; gap: 40px; margin-top: 5px; }
+        .radio-group label { display: flex; align-items: center; font-weight: normal; font-size: 1.1em; cursor: pointer; margin-bottom: 0; }
+        input[type="radio"] { width: 24px; height: 24px; margin-right: 10px; cursor: pointer; }
+        /* 送信ボタン */
+        button { width: 100%; padding: 18px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button:active { background: #1557b0; transform: translateY(2px); box-shadow: none; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .status { display: none; text-align: center; margin-top: 15px; font-weight: bold; color: #e67e22; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>設備点検入力シート</h1>
+    <form id="inspectionForm">
+        
+        <!-- セクション1 -->
+        <div class="section">
+            <div class="item"><label>1. 受電電圧計</label><input type="number" name="item1" step="any"></div>
+            <div class="item"><label>2. 二次電圧計</label><input type="number" name="item2" step="any"></div>
+            <div class="item"><label>3. 主ポンプ電圧計</label><input type="number" name="item3" step="any"></div>
+            <div class="item"><label>4. 水中ポンプ電流計</label><input type="number" name="item4" step="any"></div>
+            <div class="item"><label>5. 800φ運転時間</label><input type="number" name="item5" step="any"></div>
+            <div class="item"><label>6. ランプテスト</label><div class="radio-group"><label><input type="radio" name="item6" value="可" checked>可</label><label><input type="radio" name="item6" value="否">否</label></div></div>
+        </div>
+
+        <!-- セクション2 -->
+        <div class="section">
+            <div class="item"><label>7. コンプレッサー電流</label><input type="number" name="item7" step="any"></div>
+            <div class="item"><label>8. 運転状態</label><div class="radio-group"><label><input type="radio" name="item8" value="可" checked>可</label><label><input type="radio" name="item8" value="否">否</label></div></div>
+            <div class="item"><label>9. 燃料移送１号電流</label><input type="number" name="item9" step="any"></div>
+            <div class="item"><label>10. 運転状態</label><div class="radio-group"><label><input type="radio" name="item10" value="可" checked>可</label><label><input type="radio" name="item10" value="否">否</label></div></div>
+            <div class="item"><label>11. 燃料移送２号電流</label><input type="number" name="item11" step="any"></div>
+            <div class="item"><label>12. 運転状態</label><div class="radio-group"><label><input type="radio" name="item12" value="可" checked>可</label><label><input type="radio" name="item12" value="否">否</label></div></div>
+            <div class="item"><label>13. ランプテスト</label><div class="radio-group"><label><input type="radio" name="item13" value="可" checked>可</label><label><input type="radio" name="item13" value="否">否</label></div></div>
+            <div class="item"><label>14. 小出槽残量</label><input type="number" name="item14" step="any"></div>
+        </div>
+
+        <!-- セクション3 -->
+        <div class="section">
+            <div class="item"><label>15. エンジンオイル量</label><div class="radio-group"><label><input type="radio" name="item15" value="可" checked>可</label><label><input type="radio" name="item15" value="否">否</label></div></div>
+            <div class="item"><label>16. 冷却水量</label><div class="radio-group"><label><input type="radio" name="item16" value="可" checked>可</label><label><input type="radio" name="item16" value="否">否</label></div></div>
+            <div class="item"><label>17. エンジン潤滑ポンプ</label><input type="number" name="item17" step="any"></div>
+            <div class="item"><label>18. 運転状態</label><div class="radio-group"><label><input type="radio" name="item18" value="可" checked>可</label><label><input type="radio" name="item18" value="否">否</label></div></div>
+            <div class="item"><label>19. 減速機潤滑ポンプ</label><input type="number" name="item19" step="any"></div>
+            <div class="item"><label>20. 運転状態</label><div class="radio-group"><label><input type="radio" name="item20" value="可" checked>可</label><label><input type="radio" name="item20" value="否">否</label></div></div>
+            <div class="item"><label>21. 減速機CLF</label><input type="number" name="item21" step="any"></div>
+            <div class="item"><label>22. 運転状態</label><div class="radio-group"><label><input type="radio" name="item22" value="可" checked>可</label><label><input type="radio" name="item22" value="否">否</label></div></div>
+            <div class="item"><label>23. 逆転機CLF</label><input type="number" name="item23" step="any"></div>
+            <div class="item"><label>24. 運転状態</label><div class="radio-group"><label><input type="radio" name="item24" value="可" checked>可</label><label><input type="radio" name="item24" value="否">否</label></div></div>
+        </div>
+
+        <!-- セクション4 -->
+        <div class="section">
+            <div class="item"><label>25. エンジン回転数</label><input type="number" name="item25" step="any"></div>
+            <div class="item"><label>26. 油圧</label><input type="number" name="item26" step="any"></div>
+            <div class="item"><label>27. 水圧</label><input type="number" name="item27" step="any"></div>
+            <div class="item"><label>28. エンジン運転時間</label><input type="number" name="item28" step="any"></div>
+            <div class="item"><label>29. 運転状態</label><div class="radio-group"><label><input type="radio" name="item29" value="可" checked>可</label><label><input type="radio" name="item29" value="否">否</label></div></div>
+            <div class="item"><label>30. ランプテスト</label><div class="radio-group"><label><input type="radio" name="item30" value="可" checked>可</label><label><input type="radio" name="item30" value="否">否</label></div></div>
+        </div>
+
+        <!-- セクション5 -->
+        <div class="section">
+            <div class="item"><label>31. バッテリー液</label><div class="radio-group"><label><input type="radio" name="item31" value="可" checked>可</label><label><input type="radio" name="item31" value="否">否</label></div></div>
+            <div class="item"><label>32. 建物東西ファン</label><div class="radio-group"><label><input type="radio" name="item32" value="可" checked>可</label><label><input type="radio" name="item32" value="否">否</label></div></div>
+            <div class="item"><label>33. 室内灯</label><div class="radio-group"><label><input type="radio" name="item33" value="可" checked>可</label><label><input type="radio" name="item33" value="否">否</label></div></div>
+            <div class="item"><label>34. 外灯</label><div class="radio-group"><label><input type="radio" name="item34" value="可" checked>可</label><label><input type="radio" name="item34" value="否">否</label></div></div>
+        </div>
+
+        <!-- セクション6 -->
+        <div class="section">
+            <div class="item"><label>35. 除塵機電流</label><input type="number" name="item35" step="any"></div>
+            <div class="item"><label>36. 運転状態</label><div class="radio-group"><label><input type="radio" name="item36" value="可" checked>可</label><label><input type="radio" name="item36" value="否">否</label></div></div>
+            <div class="item"><label>37. 照明</label><div class="radio-group"><label><input type="radio" name="item37" value="可" checked>可</label><label><input type="radio" name="item37" value="否">否</label></div></div>
+            <div class="item"><label>38. スクリーン清掃</label><div class="radio-group"><label><input type="radio" name="item38" value="可" checked>可</label><label><input type="radio" name="item38" value="否">否</label></div></div>
+        </div>
+
+        <div class="section">
+            <div class="item"><label>39. 南外灯</label><div class="radio-group"><label><input type="radio" name="item39" value="可" checked>可</label><label><input type="radio" name="item39" value="否">否</label></div></div>
+        </div>
+
+        <div class="section">
+            <div class="item"><label>40. 電力使用量</label><input type="number" name="item40" step="any"></div>
+            <div class="item"><label>41. 水道使用量</label><input type="number" name="item41" step="any"></div>
+            <div class="item"><label>42. 重油残量</label><input type="number" name="item42" step="any"></div>
+        </div>
+
+        <div class="section">
+            <div class="item"><label>43. 燃料防油堤排水</label><div class="radio-group"><label><input type="radio" name="item43" value="可" checked>可</label><label><input type="radio" name="item43" value="否">否</label></div></div>
+        </div>
+
+        <div class="section">
+            <div class="item"><label>44. 燃料配管漏れ</label><div class="radio-group"><label><input type="radio" name="item44" value="可" checked>可</label><label><input type="radio" name="item44" value="否">否</label></div></div>
+            <div class="item"><label>45. 吐出弁600φ</label><div class="radio-group"><label><input type="radio" name="item45" value="可" checked>可</label><label><input type="radio" name="item45" value="否">否</label></div></div>
+            <div class="item"><label>46. 吐出弁800φ</label><div class="radio-group"><label><input type="radio" name="item46" value="可" checked>可</label><label><input type="radio" name="item46" value="否">否</label></div></div>
+        </div>
+
+        <button type="submit" id="submitBtn">点検データを送信する</button>
+        <div id="status" class="status">送信中... しばらくお待ちください</div>
+    </form>
+</div>
+
+<script>
+    // ★重要：GASをデプロイした後に発行される「ウェブアプリURL」をここに貼り付けてください
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxAghHtkPUUwT7Yzbubjn-xbJk1S0exrYgfYJNbMiiYONXUn22bEyrlVLpErU1-6JE7/exec";
+
+    const form = document.getElementById('inspectionForm');
+    const btn = document.getElementById('submitBtn');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if(!confirm("送信してもよろしいですか？")) return;
+
+        btn.disabled = true;
+        status.style.display = "block";
+
+        const formData = new FormData(form);
+        const params = new URLSearchParams(formData);
+
+        fetch(GAS_URL, {
+            method: "POST",
+            body: params,
+            mode: "no-cors"
+        })
+        .then(() => {
+            alert("送信が完了しました！");
+            location.reload(); // ページをリロードして入力をリセット
+        })
+        .catch(err => {
+            alert("エラーが発生しました: " + err);
+            btn.disabled = false;
+            status.style.display = "none";
+        });
+    });
+</script>
+
+</body>
+</html>
