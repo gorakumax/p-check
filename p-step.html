@@ -86,6 +86,20 @@
 input:focus::placeholder {
   opacity: 0.1;
 }
+/* Luminousの拡大画像を画面内に収める */
+.lum-lightbox-image {
+    max-width: 95vw !important;  /* 画面幅の95%を最大にする（少し余白を作る） */
+    max-height: 80vh !important; /* 画面高さの80%を最大にする（上下もはみ出さない） */
+    width: auto !important;      /* アスペクト比を維持 */
+    height: auto !important;     /* アスペクト比を維持 */
+}
+
+/* 拡大中、背景からはみ出さないように制御 */
+.lum-lightbox-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
     </style>
 
 </head>
