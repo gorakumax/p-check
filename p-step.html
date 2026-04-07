@@ -33,7 +33,7 @@
         .section-title { background: #e8f0fe; padding: 10px; border-radius: 5px; font-weight: bold; margin-bottom: 15px; color: #1967d2; }
         .item { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
         label { display: block; font-weight: bold; font-size: 0.9em; margin-bottom: 5px; }
-        input[type="number"] { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 18px; inputmode: decimal; box-sizing: border-box; }
+        input[type="number"] { width: 150px; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 18px; inputmode: decimal; box-sizing: border-box; }
         .radio-group { display: flex; gap: 30px; margin-top: 5px; }
         .radio-group label { display: flex; align-items: center; font-weight: normal; font-size: 1.1em; cursor: pointer; }
         input[type="radio"] { width: 22px; height: 22px; margin-right: 8px; }
@@ -62,13 +62,15 @@
     width: 100px; /* スマホで見やすいサイズ */
 }
 
+
+/* ↓↓↓ 修正後のコード ↓↓↓ */
 .check-photo img {
-    width: 100%;
-    height: auto;
+    width: 100px;         /* 幅を100pxに固定 */
+    height: 100px;        /* 高さも100pxに固定（正方形にする） */
+    object-fit: cover;    /* ★これが魔法の言葉！真ん中で綺麗に切り抜く */
     border-radius: 6px;
     border: 1px solid #ddd;
 }
-
 /* 補足説明テキスト */
 .memo {
     font-size: 0.85em;
@@ -76,34 +78,64 @@
     line-height: 1.4;
     margin-top: 0;
 }
+
+::placeholder {
+  color: red;    /* ベースの色を赤に指定 */
+  opacity: 0.5;  /* 全ブラウザで一律 50% の不透明度にする */
+}
+input:focus::placeholder {
+  opacity: 0.1;
+}
     </style>
 
 </head>
 <body>
 
 <div class="container">
-    <h1>ポンプ場点検</h1>
+    <h1>排水機場 点検手順マニュアルと点検入力</h1>
+<div class="reset-area" style="text-align: right; margin-bottom: 20px;">
+  <button type="button" onclick="confirmReset()" 
+    style="background-color: #f0f0f0; color: #666; border: 1px solid #ccc; padding: 5px 10px; font-size: 12px; border-radius: 4px;">
+    入力内容を全消去
+  </button>
+</div>
     <form id="inspectionForm">
 
 <!-- STEP 1: 電気系統 -->
 <div class="step active" id="step1">
     <div class="section-title">【1/6】電気系統（1～6）</div>
-    <div class="item">
-      <a href="img/002-1.webp" class="zoom check-photo">
-            <img src="img/002-1.webp" alt="受電電圧計の見本" loading="lazy" style="width: 100px; height: auto;">
+
+    <div class="item">        <label>■ 機場所入場時にしていただくこと</label>
+      <a href="img/001-1.webp" class="zoom check-photo">
+            <img src="img/001-1.webp"">
         </a>
         <p class="memo">
-            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+～テレメーターの「管理人『在』・『不在』」の切替え～<br />
+●排水機場の運転状況や水位等を遠隔で監視するシステムが、河川水路課及び下水道施設管理課にあり、それぞれの課の画面上に表示されています。「テレメーター」は、そのシステムに対して、その機場の運転状況や水位等の情報を送信する装置となっています。<br />
+<br />
+【入場時に行っていただくこと “管理人『在』” 】<br />
+①「管理人」のスイッチを右に回し、「在室」に合わせる。<br />
+②スイッチの上の「管理人 不在」のランプが消灯し、「管理人 在」のランプが点灯したことを確認する。<br />
+③確認後、点検等作業を開始してください。
+        </p>
+    </div>
+
+    <div class="item">        <label>電動機関係</label>
+      <a href="img/002-1.webp" class="zoom check-photo">
+            <img src="img/002-1.webp"">
+        </a>
+        <p class="memo">
+（その1）高圧受電設備等 点検方法<br />
         </p>
     </div>
     <!-- 1. 受電電圧計 -->
     <div class="item">
         <label>1. 受電電圧計</label>
         <a href="img/002-4.webp" class="zoom check-photo">
-            <img src="img/002-4.webp" alt="受電電圧計の見本" loading="lazy" style="width: 100px; height: auto;">
+            <img src="img/002-4.webp">
         </a>
         <p class="memo">
-            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+            ・引込受電盤の受電電圧計（1-①）を見て数値（電圧・V）を読み、週報に記入する。<br />
         </p>
         <input type="number" name="item1" step="any" placeholder="V">
     </div>
@@ -112,19 +144,58 @@
     <div class="item">
         <label>2. 二次電圧計</label>
         <a href="img/002-3.webp" class="zoom check-photo">
-            <img src="img/002-3.webp" alt="二次電圧計の見本" loading="lazy" style="width: 100px; height: auto;">
+            <img src="img/002-3.webp">
         </a>
         <p class="memo">
-            低圧盤の電圧計を確認。通常は<b>210V</b>前後です。
+            ・変圧器盤の主変圧器二次電圧計（1-②）を見て数値（電圧・V）を読み、週報に記入する。<br />
         </p>
         <input type="number" name="item2" step="any" placeholder="V">
     </div>
 
     <!-- 3番以降は元のスタイルのままでも、順次上記に書き換えてもOK -->
-<div class="item"><label>3. 主ポンプ電圧計</label><input type="number" name="item3" step="any"></div>
-            <div class="item"><label>4. 水中ポンプ電流計</label><input type="number" name="item4" step="any"></div>
-            <div class="item"><label>5. 800φ運転時間</label><input type="number" name="item5" step="any"></div>
-            <div class="item"><label>6. ランプテスト</label><div class="radio-group"><label><input type="radio" name="item6" value="可" checked>可</label><label><input type="radio" name="item6" value="否">否</label></div></div>
+<div class="item"><label>3. 主ポンプ電圧計</label>
+        <a href="img/002-2.webp" class="zoom check-photo">
+            <img src="img/002-2.webp">
+        </a>
+        <p class="memo">
+            ・排水ポンプ盤の動力変圧器二次電圧計（1-③）を見て数値（電圧・V）を読み、週報に記入する。<br />
+        </p>
+<input type="number" name="item3" step="any" placeholder="V"></div>
+            <div class="item"><label>4. 水中ポンプ電流計</label>
+        <a href="img/003-1.webp" class="zoom check-photo">
+            <img src="img/003-1.webp">
+        </a>
+        <p class="memo">
+            （その2）φ800水中ポンプ操作盤 点検方法<br />
+①排水ポンプ盤にある操作用小扉を開き、水中ポンプの運転モード切替スイッチを左に回して「手動」に合わせる。（「自動」ランプが消灯。）<br />
+※高圧設備で危険なため、<b>操作用小扉以外の扉は開かないこと。</b><br />
+②排水ポンプ盤の「準備完了」のランプが点灯していることを確認する。<br />
+※点灯していなければポンプは<b>運転できない</b>ので、その場合は3.～5.の点検は行わず、6.に進む。<br />
+③ポンプ運転・停止レバーを運転（右）側に傾けて手を放すと、ポンプ運転が開始する。<br />
+④運転中に水中ポンプ電流計（1-④）の黒い針の数値を読み、週報に記入する。<br />
+⑤ポンプ運転・停止レバーを停止（左）側に傾けて手を放すと、運転が停止する。<br />
+※ポンプ運転中に水位が<b>下限（LL）に達した場合</b>は、自動で停止する。<br />
+⑥水中ポンプの運転モード切替スイッチを右に回し、「自動」に合わせる。（「自動」ランプが点灯。）<br />
+⑦操作用小扉を閉じる。<br />
+        </p>
+<input type="number" name="item4" step="any" placeholder="V"></div>
+            <div class="item"><label>5. 800φ運転時間</label>
+        <a href="img/013-2.webp" class="zoom check-photo">
+            <img src="img/013-2.webp">
+        </a>
+        <p class="memo">
+            ・排水ポンプ盤 φ800（6-②）: 盤面の「運転時間」計の下段の数値を記録する。<br />
+        </p>
+<input type="number" name="item5" step="any" placeholder="V"></div>
+            <div class="item"><label>6. ランプテスト</label>
+        <a href="img/009-1.webp" class="zoom check-photo">
+            <img src="img/009-1.webp">
+        </a>
+        <p class="memo">
+            ・5-③（表示灯球切れ）: 「ランプテスト」ボタンを押し、赤色囲み部分が全て点灯すれば「良」。<br />
+・5-⑤（警報等）: 赤い故障ランプが点灯していないか確認。異常時は河川水路課へ連絡。<br />
+        </p>
+<div class="radio-group"><label><input type="radio" name="item6" value="良" checked>良</label><label><input type="radio" name="item6" value="否">否</label></div></div>
 
     <div class="btn-group">
         <button type="button" class="btn-next" onclick="nextStep(2)">次へ ＞</button>
@@ -134,16 +205,123 @@
 
         <!-- STEP 2: 燃料・圧縮機 -->
         <div class="step" id="step2">
-            <div class="section-title">【2/6】燃料・圧縮機（7～14）</div>
-            <div class="guide-image">画像エリア：コンプレッサー・燃料計</div>
-            <div class="item"><label>7. コンプレッサー電流</label><input type="number" name="item7" step="any"></div>
-            <div class="item"><label>8. 運転状態</label><div class="radio-group"><label><input type="radio" name="item8" value="可" checked>可</label><label><input type="radio" name="item8" value="否">否</label></div></div>
-            <div class="item"><label>9. 燃料移送１号電流</label><input type="number" name="item9" step="any"></div>
-            <div class="item"><label>10. 運転状態</label><div class="radio-group"><label><input type="radio" name="item10" value="可" checked>可</label><label><input type="radio" name="item10" value="否">否</label></div></div>
-            <div class="item"><label>11. 燃料移送２号電流</label><input type="number" name="item11" step="any"></div>
-            <div class="item"><label>12. 運転状態</label><div class="radio-group"><label><input type="radio" name="item12" value="可" checked>可</label><label><input type="radio" name="item12" value="否">否</label></div></div>
-            <div class="item"><label>13. ランプテスト</label><div class="radio-group"><label><input type="radio" name="item13" value="可" checked>可</label><label><input type="radio" name="item13" value="否">否</label></div></div>
-            <div class="item"><label>14. 小出槽残量</label><input type="number" name="item14" step="any"></div>
+            <div class="section-title">【2/6】モーター掛補機 燃料・圧縮機（7～15）</div>
+            <div class="item"><label>モーター掛け空気圧縮機</label>
+        <a href="img/006-1.webp" class="zoom check-photo">
+            <img src="img/006-1.webp">
+        </a>
+        <a href="img/006-4.webp" class="zoom check-photo">
+            <img src="img/006-4.webp">
+        </a>
+        <p class="memo">
+（その1）モーター掛け空気圧縮機<br />
+①補機制御盤の左中ほどにある、「コンプレッサー」の運転モード切替スイッチが「自動」になっていることを確認する。<br />
+        </p></div>
+            <div class="item"><label>主空気槽</label>
+        <a href="img/006-5.webp" class="zoom check-photo">
+            <img src="img/006-5.webp">
+        </a>
+        <a href="img/006-6.webp" class="zoom check-photo">
+            <img src="img/006-6.webp">
+        </a>
+        <a href="img/006-7.webp" class="zoom check-photo">
+            <img src="img/006-7.webp">
+        </a>
+        <p class="memo">②主空気槽の裏側にある空気抜き（ドレン）のハンドルを左に回し、強制的に主空気槽内の空気を一定以下（空気槽圧力2.1以下）まで抜く。<br />
+③主空気槽の圧力メーターが「2.1」以下になると、空気圧縮機が自動で運転を始め、空気圧槽内へ空気が送られる。（運転開始後、ドレンを右に回して完全に閉めること）<br />
+        </p></div>
+            <div class="item"><label>7. コンプレッサー電流</label>
+        <a href="img/006-3.webp" class="zoom check-photo">
+            <img src="img/006-3.webp">
+        </a>
+        <p class="memo">
+            ④補機制御盤の「コンプレッサー」の電流計（3-②）を読み、週報に記録。
+<input type="number" name="item7" step="any" placeholder="V"></div>
+            <div class="item"><label>8. 運転状態</label>
+        <a href="img/006-2.webp" class="zoom check-photo">
+            <img src="img/006-2.webp">
+        </a>
+        <a href="img/006-7.webp" class="zoom check-photo">
+            <img src="img/006-7.webp">
+        </a>
+        <p class="memo">異常がなければ「良」。<br />
+⑤圧力メーターが「2.9」程度で自動停止することを確認する。<br />
+        </p>
+        </p>
+<div class="radio-group"><label><input type="radio" name="item8" value="良" checked>良</label><label><input type="radio" name="item8" value="否">否</label></div></div>
+            <div class="item"><label>9. 燃料移送１号電流</label>
+        <a href="img/006-b.webp" class="zoom check-photo">
+            <img src="img/006-b.webp">
+        </a>
+        <a href="img/006-e.webp" class="zoom check-photo">
+            <img src="img/006-e.webp">
+        </a>
+        <a href="img/006-e.webp" class="zoom check-photo">
+            <img src="img/006-a.webp">
+        </a>
+        <p class="memo"><b>※注意：小出槽が満タンに近いときは運転しないこと。</B><br />①「No.1及びNo.2燃料移送ポンプ」を「手動」に切り替える。<br />
+②「号機」選択スイッチを「1号」に合わせる。<br />
+③「運転」ボタンを押し、電流計（3-①）を読み、週報に記録。
+        </p>
+<input type="number" name="item9" step="any" placeholder="V"></div>
+            <div class="item"><label>10. 運転状態</label>
+        <a href="img/006-b.webp" class="zoom check-photo">
+            <img src="img/006-b.webp">
+        </a>
+        <p class="memo">異常がなければ「良」。<br />
+④「停止」ボタンを押す。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item10" value="良" checked>良</label><label><input type="radio" name="item10" value="否">否</label></div></div>
+            <div class="item"><label>11. 燃料移送２号電流</label>
+         <a href="img/006-b.webp" class="zoom check-photo">
+            <img src="img/006-b.webp">
+        </a>
+        <a href="img/006-d.webp" class="zoom check-photo">
+            <img src="img/006-d.webp">
+        </a>
+        <p class="memo">
+②「号機」選択スイッチを「2号」に合わせる。<br />
+③「運転」ボタンを押し、電流計（3-①）を読み、週報に記録。
+        </p>
+<input type="number" name="item11" step="any" placeholder="V"></div>
+            <div class="item"><label>12. 運転状態</label>
+         <a href="img/006-b.webp" class="zoom check-photo">
+            <img src="img/006-b.webp">
+        </a>
+        <p class="memo">異常がなければ「良」。<br />
+④「停止」ボタンを押す。<br />
+⑤終了後、選択を「自交」に合わせ、スイッチを「自動」に戻す。<br />
+        </p>
+<div class="radio-group"><label><input type="radio" name="item12" value="良" checked>良</label><label><input type="radio" name="item12" value="否">否</label></div></div>
+            <div class="item"><label>13. ランプテスト</label>
+        <a href="img/009-2.webp" class="zoom check-photo">
+            <img src="img/009-2.webp">
+        </a>
+        <p class="memo">
+            ・5-③（表示灯球切れ）: 「ランプテスト」ボタンを押し、赤色囲み部分が全て点灯すれば「良」。<br />
+・5-⑤（警報等）: 赤い故障ランプが点灯していないか確認。異常時は河川水路課へ連絡。<br />
+        </p>
+<div class="radio-group"><label><input type="radio" name="item13" value="良" checked>良</label><label><input type="radio" name="item13" value="否">否</label></div></div>
+            <div class="item"><label>14. 小出槽残量</label>
+        <a href="img/008-3.webp" class="zoom check-photo">
+            <img src="img/008-3.webp">
+        </a>
+  
+        <p class="memo">
+・重油（4-③）: 燃料小出槽の油面計を確認<br />
+        </p>
+<input type="number" name="item14" step="any" placeholder="V"></div>
+<!-- ★【要修正】あとでitem番号を振り直す：追加分 -->
+            <div class="item"><label>15. 燃料小出槽配管漏れ</label>
+      <a href="img/010-3.webp" class="zoom check-photo">
+            <img src="img/010-3.webp">
+        </a>
+        <p class="memo">
+・5-②（燃料配管漏れ）: 燃料小出槽まわりの配管漏れ確認。<br />
+        </p>
+<div class="radio-group"><label><input type="radio" name="item15" value="良" checked>良</label><label><input type="radio" name="item13" value="否">否</label></div></div>
+<!-- ★【要修正】kokomade -->
+
             <div class="btn-group">
                 <button type="button" class="btn-prev" onclick="nextStep(1)">＜ 戻る</button>
                 <button type="button" class="btn-next" onclick="nextStep(3)">次へ ＞</button>
@@ -152,18 +330,88 @@
 
         <!-- STEP 3: エンジン詳細 -->
         <div class="step" id="step3">
-            <div class="section-title">【3/6】エンジン・減速機（15～24）</div>
+            <div class="section-title">【3/6】エンジン・減速機（16～25）</div>
             <div class="guide-image">画像エリア：オイルゲージ・潤滑ポンプ</div>
-            <div class="item"><label>15. エンジンオイル量</label><div class="radio-group"><label><input type="radio" name="item15" value="可" checked>可</label><label><input type="radio" name="item15" value="否">否</label></div></div>
-            <div class="item"><label>16. 冷却水量</label><div class="radio-group"><label><input type="radio" name="item16" value="可" checked>可</label><label><input type="radio" name="item16" value="否">否</label></div></div>
-            <div class="item"><label>17. エンジン潤滑ポンプ</label><input type="number" name="item17" step="any"></div>
-            <div class="item"><label>18. 運転状態</label><div class="radio-group"><label><input type="radio" name="item18" value="可" checked>可</label><label><input type="radio" name="item18" value="否">否</label></div></div>
-            <div class="item"><label>19. 減速機潤滑ポンプ</label><input type="number" name="item19" step="any"></div>
-            <div class="item"><label>20. 運転状態</label><div class="radio-group"><label><input type="radio" name="item20" value="可" checked>可</label><label><input type="radio" name="item20" value="否">否</label></div></div>
-            <div class="item"><label>21. 減速機CLF</label><input type="number" name="item21" step="any"></div>
-            <div class="item"><label>22. 運転状態</label><div class="radio-group"><label><input type="radio" name="item22" value="可" checked>可</label><label><input type="radio" name="item22" value="否">否</label></div></div>
-            <div class="item"><label>23. 逆転機CLF</label><input type="number" name="item23" step="any"></div>
-            <div class="item"><label>24. 運転状態</label><div class="radio-group"><label><input type="radio" name="item24" value="可" checked>可</label><label><input type="radio" name="item24" value="否">否</label></div></div>
+            <div class="item"><label>16. エンジンオイル量</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item16" value="良" checked>良</label><label><input type="radio" name="item16" value="否">否</label></div></div>
+            <div class="item"><label>17. 冷却水量</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item17" value="良" checked>良</label><label><input type="radio" name="item17" value="否">否</label></div></div>
+            <div class="item"><label>18. エンジン潤滑ポンプ</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item18" step="any" placeholder="V"></div>
+            <div class="item"><label>19. 運転状態</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item19" value="良" checked>良</label><label><input type="radio" name="item19" value="否">否</label></div></div>
+            <div class="item"><label>20. 減速機潤滑ポンプ</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item20" step="any" placeholder="V"></div>
+            <div class="item"><label>21. 運転状態</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item21" value="良" checked>良</label><label><input type="radio" name="item21" value="否">否</label></div></div>
+            <div class="item"><label>22. 減速機CLF</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item22" step="any" placeholder="V"></div>
+            <div class="item"><label>23. 運転状態</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item23" value="良" checked>良</label><label><input type="radio" name="item23" value="否">否</label></div></div>
+            <div class="item"><label>24. 逆転機CLF</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item24" step="any" placeholder="V"></div>
+            <div class="item"><label>25. 運転状態</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item25" value="良" checked>良</label><label><input type="radio" name="item25" value="否">否</label></div></div>
             <div class="btn-group">
                 <button type="button" class="btn-prev" onclick="nextStep(2)">＜ 戻る</button>
                 <button type="button" class="btn-next" onclick="nextStep(4)">次へ ＞</button>
@@ -172,14 +420,57 @@
 
         <!-- STEP 4: 運転計測 -->
         <div class="step" id="step4">
-            <div class="section-title">【4/6】運転計測（25～30）</div>
+            <div class="section-title">【4/6】運転計測（26～31）</div>
             <div class="guide-image">画像エリア：エンジン回転計・圧力計</div>
-            <div class="item"><label>25. エンジン回転数</label><input type="number" name="item25" step="any"></div>
-            <div class="item"><label>26. 油圧</label><input type="number" name="item26" step="any"></div>
-            <div class="item"><label>27. 水圧</label><input type="number" name="item27" step="any"></div>
-            <div class="item"><label>28. エンジン運転時間</label><input type="number" name="item28" step="any"></div>
-            <div class="item"><label>29. 運転状態</label><div class="radio-group"><label><input type="radio" name="item29" value="可" checked>可</label><label><input type="radio" name="item29" value="否">否</label></div></div>
-            <div class="item"><label>30. ランプテスト</label><div class="radio-group"><label><input type="radio" name="item30" value="可" checked>可</label><label><input type="radio" name="item30" value="否">否</label></div></div>
+            <div class="item"><label>26. エンジン回転数</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item26" step="any" placeholder="V"></div>
+            <div class="item"><label>27. 油圧</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item27" step="any" placeholder="V"></div>
+            <div class="item"><label>28. 水圧</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item28" step="any" placeholder="V"></div>
+            <div class="item"><label>29. エンジン運転時間</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item29" step="any" placeholder="V"></div>
+            <div class="item"><label>30. 運転状態</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item30" value="良" checked>良</label><label><input type="radio" name="item30" value="否">否</label></div></div>
+            <div class="item"><label>31. ランプテスト</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            ・5-③（表示灯球切れ）: 「ランプテスト」ボタンを押し、赤色囲み部分が全て点灯すれば「良」。<br />
+・5-⑤（警報等）: 赤い故障ランプが点灯していないか確認。異常時は河川水路課へ連絡。<br />
+        </p>
+<div class="radio-group"><label><input type="radio" name="item31" value="良" checked>良</label><label><input type="radio" name="item31" value="否">否</label></div></div>
             <div class="btn-group">
                 <button type="button" class="btn-prev" onclick="nextStep(3)">＜ 戻る</button>
                 <button type="button" class="btn-next" onclick="nextStep(5)">次へ ＞</button>
@@ -188,17 +479,80 @@
 
         <!-- STEP 5: 建物・外灯・除塵 -->
         <div class="step" id="step5">
-            <div class="section-title">【5/6】建物・除塵（31～39）</div>
+            <div class="section-title">【5/6】建物・除塵（32～40）</div>
             <div class="guide-image">画像エリア：除塵機・照明スイッチ盤</div>
-            <div class="item"><label>31. バッテリー液</label><div class="radio-group"><label><input type="radio" name="item31" value="可" checked>可</label><label><input type="radio" name="item31" value="否">否</label></div></div>
-            <div class="item"><label>32. 建物東西ファン</label><div class="radio-group"><label><input type="radio" name="item32" value="可" checked>可</label><label><input type="radio" name="item32" value="否">否</label></div></div>
-            <div class="item"><label>33. 室内灯</label><div class="radio-group"><label><input type="radio" name="item33" value="可" checked>可</label><label><input type="radio" name="item33" value="否">否</label></div></div>
-            <div class="item"><label>34. 外灯</label><div class="radio-group"><label><input type="radio" name="item34" value="可" checked>可</label><label><input type="radio" name="item34" value="否">否</label></div></div>
-            <div class="item"><label>35. 除塵機電流</label><input type="number" name="item35" step="any"></div>
-            <div class="item"><label>36. 運転状態</label><div class="radio-group"><label><input type="radio" name="item36" value="可" checked>可</label><label><input type="radio" name="item36" value="否">否</label></div></div>
-            <div class="item"><label>37. 照明</label><div class="radio-group"><label><input type="radio" name="item37" value="可" checked>可</label><label><input type="radio" name="item37" value="否">否</label></div></div>
-            <div class="item"><label>38. スクリーン清掃</label><div class="radio-group"><label><input type="radio" name="item38" value="可" checked>可</label><label><input type="radio" name="item38" value="否">否</label></div></div>
-            <div class="item"><label>39. 南外灯</label><div class="radio-group"><label><input type="radio" name="item39" value="可" checked>可</label><label><input type="radio" name="item39" value="否">否</label></div></div>
+            <div class="item"><label>32. バッテリー液</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item32" value="良" checked>良</label><label><input type="radio" name="item32" value="否">否</label></div></div>
+            <div class="item"><label>33. 建物東西ファン</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item33" value="良" checked>良</label><label><input type="radio" name="item33" value="否">否</label></div></div>
+            <div class="item"><label>34. 室内灯</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item34" value="良" checked>良</label><label><input type="radio" name="item34" value="否">否</label></div></div>
+            <div class="item"><label>35. 外灯</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item35" value="良" checked>良</label><label><input type="radio" name="item35" value="否">否</label></div></div>
+            <div class="item"><label>36. 除塵機電流</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item36" step="any" placeholder="V"></div>
+            <div class="item"><label>37. 運転状態</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item37" value="良" checked>良</label><label><input type="radio" name="item37" value="否">否</label></div></div>
+            <div class="item"><label>38. 照明</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item38" value="良" checked>良</label><label><input type="radio" name="item38" value="否">否</label></div></div>
+            <div class="item"><label>39. スクリーン清掃</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item39" value="良" checked>良</label><label><input type="radio" name="item39" value="否">否</label></div></div>
+            <div class="item"><label>40. 南外灯</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item40" value="良" checked>良</label><label><input type="radio" name="item40" value="否">否</label></div></div>
             <div class="btn-group">
                 <button type="button" class="btn-prev" onclick="nextStep(4)">＜ 戻る</button>
                 <button type="button" class="btn-next" onclick="nextStep(6)">次へ ＞</button>
@@ -207,16 +561,84 @@
 
         <!-- STEP 6: 検針・最終確認 -->
         <div class="step" id="step6">
-            <div class="section-title">【6/6】検針・最終確認（40～46）</div>
+            <div class="section-title">【6/6】検針・最終確認（41～48）</div>
             <div class="guide-image">画像エリア：メーター類（電力・水道）</div>
-            <div class="item"><label>40. 電力使用量</label><input type="number" name="item40" step="any"></div>
-            <div class="item"><label>41. 水道使用量</label><input type="number" name="item41" step="any"></div>
-            <div class="item"><label>42. 重油残量</label><input type="number" name="item42" step="any"></div>
-            <div class="item"><label>43. 燃料防油堤排水</label><div class="radio-group"><label><input type="radio" name="item43" value="可" checked>可</label><label><input type="radio" name="item43" value="否">否</label></div></div>
-            <div class="item"><label>44. 燃料配管漏れ</label><div class="radio-group"><label><input type="radio" name="item44" value="可" checked>可</label><label><input type="radio" name="item44" value="否">否</label></div></div>
-            <div class="item"><label>45. 吐出弁600φ</label><div class="radio-group"><label><input type="radio" name="item45" value="可" checked>可</label><label><input type="radio" name="item45" value="否">否</label></div></div>
-            <div class="item"><label>46. 吐出弁800φ</label><div class="radio-group"><label><input type="radio" name="item46" value="可" checked>可</label><label><input type="radio" name="item46" value="否">否</label></div></div>
-            <div class="item"><label>47. 警報等</label><div class="radio-group"><label><input type="radio" name="item47" value="可" checked>可</label><label><input type="radio" name="item47" value="否">否</label></div></div>
+            <div class="item"><label>41. 電力使用量</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item41" step="any" placeholder="V"></div>
+            <div class="item"><label>42. 水道使用量</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item42" step="any" placeholder="V"></div>
+            <div class="item"><label>43. 重油残量</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<input type="number" name="item43" step="any" placeholder="V"></div>
+            <div class="item"><label>44. 燃料防油堤排水</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item44" value="良" checked>良</label><label><input type="radio" name="item44" value="否">否</label></div></div>
+            <div class="item"><label>45. 燃料配管漏れ</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item45" value="良" checked>良</label><label><input type="radio" name="item45" value="否">否</label></div></div>
+            <div class="item"><label>46. 吐出弁600φ</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item46" value="良" checked>良</label><label><input type="radio" name="item46" value="否">否</label></div></div>
+            <div class="item"><label>47. 吐出弁800φ</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item47" value="良" checked>良</label><label><input type="radio" name="item47" value="否">否</label></div></div>
+            <div class="item"><label>48. 警報等</label>
+        <a href="img/002-4.webp" class="zoom check-photo">
+            <img src="img/002-4.webp">
+        </a>
+        <p class="memo">
+            赤色の指針が<b>6600V</b>付近を指しているか確認。タップで拡大。
+        </p>
+<div class="radio-group"><label><input type="radio" name="item48" value="良" checked>良</label><label><input type="radio" name="item48" value="否">否</label></div></div>
+    <div class="item">        <label>■ 機場所退出時にしていただくこと</label>
+      <a href="img/001-1.webp" class="zoom check-photo">
+            <img src="img/001-1.webp"">
+        </a>
+        <p class="memo">
+～テレメーターの「管理人『在』・『不在』」の切替え～<br />
+【退出時に行っていただくこと “管理人『不在』” 】<br />
+①「管理人」のスイッチを左に回し、「不在」に合わせる。<br />
+②スイッチの上の「管理人 在」のランプが消灯し、「管理人 不在」のランプが点灯したことを確認する。<br />
+③確認後、照明の消灯と建屋・フェンスの施錠をし、退出してください。<br />
+        </p>
+    </div>
             <div class="btn-group">
                 <button type="button" class="btn-prev" onclick="nextStep(5)">＜ 戻る</button>
                 <button type="submit" class="btn-submit" id="submitBtn">全て送信する</button>
@@ -308,6 +730,19 @@
 <script>
     // 既存のスクリプトの最後の方に追加
     new LuminousGallery(document.querySelectorAll(".zoom"));
+</script>
+<script>
+function confirmReset() {
+  // 二重チェックで誤消去を鉄壁ガード
+  const firstCheck = confirm("【確認】入力した点検データをすべて削除しますか？");
+  if (firstCheck) {
+    const secondCheck = confirm("本当によろしいですか？（送信前のデータは復旧できません）");
+    if (secondCheck) {
+      localStorage.clear();
+      location.reload(); // 画面を更新して空にする
+    }
+  }
+}
 </script>
 </body>
 </html>
