@@ -86,17 +86,25 @@
 input:focus::placeholder {
   opacity: 0.1;
 }
-/* Luminousの拡大画像を画面内に収める */
-.lum-lightbox-image {
-    max-width: 95vw !important;  /* 画面幅の95%を最大にする（少し余白を作る） */
-    max-height: 80vh !important; /* 画面高さの80%を最大にする（上下もはみ出さない） */
-    width: auto !important;      /* アスペクト比を維持 */
-    height: auto !important;     /* アスペクト比を維持 */
+/* Luminous 拡大画像の強制サイズ制限 */
+.lum-lightbox {
+    z-index: 10000 !important;
 }
 
-/* 拡大中、背景からはみ出さないように制御 */
+/* 画像本体を画面内に収める */
+.lum-lightbox-inner img {
+    max-width: 90vw !important;  /* 横幅は画面の90%まで */
+    max-height: 70vh !important; /* 縦幅は画面の70%まで（閉じるボタンのスペースを確保） */
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* キャプションや閉じボタンを含めた全体の調整 */
 .lum-lightbox-inner {
-    display: flex;
+    display: flex !important;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
